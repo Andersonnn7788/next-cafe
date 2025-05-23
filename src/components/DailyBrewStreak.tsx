@@ -1,139 +1,187 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Coffee, Star } from "lucide-react";
+import { Star, Flame, Coffee } from "lucide-react";
 import { toast } from "sonner";
 
 const DailyBrewStreak = () => {
-  const [streak, setStreak] = useState(() => {
-    return parseInt(localStorage.getItem("brewStreak") || "0", 10);
-  });
-  
-  const [lastBrewDate, setLastBrewDate] = useState(() => {
-    return localStorage.getItem("lastBrewDate") || "";
-  });
-  
-  const [todayBrewed, setTodayBrewed] = useState(() => {
-    const today = new Date().toDateString();
-    return lastBrewDate === today;
-  });
-  
-  const [streakDays, setStreakDays] = useState<{ day: string; brewed: boolean; today?: boolean }[]>([]);
-  
+  const [currentStreak, setCurrentStreak] = useState(1);
+  const [hasBrewedToday, setHasBrewedToday] = useState(false);
+  const [weeklyProgress, setWeeklyProgress] = useState<boolean[]>([false, false, false, false, true, false, false]); // Sun-Sat
+
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+
   useEffect(() => {
-    // Generate the days of the week with proper status
-    const today = new Date();
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const todayIndex = today.getDay();
+    // Load streak data from localStorage
+    const savedStreak = localStorage.getItem("dailyBrewStreak");
+    const savedLastBrew = localStorage.getItem("lastBrewDate");
+    const savedWeeklyProgress = localStorage.getItem("weeklyBrewProgress");
     
-    const weekDays = Array(7).fill(null).map((_, i) => {
-      const dayIndex = (todayIndex - 6 + i + 7) % 7;
-      const dayName = days[dayIndex];
-      const isToday = i === 6;
-      
-      // If today, use todayBrewed, otherwise check if this day should be marked as brewed
-      // based on streak length
-      let brewed = false;
-      if (isToday) {
-        brewed = todayBrewed;
-      } else {
-        const daysAgo = 6 - i;
-        brewed = streak >= daysAgo;
-      }
-      
-      return {
-        day: dayName,
-        brewed,
-        today: isToday
-      };
-    });
+    if (savedStreak) {
+      setCurrentStreak(parseInt(savedStreak));
+    }
     
-    setStreakDays(weekDays);
-  }, [streak, todayBrewed]);
-  
-  const handleDailyBrew = () => {
-    const today = new Date().toDateString();
+    if (savedWeeklyProgress) {
+      setWeeklyProgress(JSON.parse(savedWeeklyProgress));
+    }
     
-    // If already brewed today, don't do anything
-    if (todayBrewed) {
-      toast.info("You've already brewed your daily coffee today!");
+    // Check if user has brewed today
+    if (savedLastBrew) {
+      const lastBrewDate = new Date(savedLastBrew);
+      const todayDate = new Date();
+      const isToday = lastBrewDate.toDateString() === todayDate.toDateString();
+      setHasBrewedToday(isToday);
+    }
+  }, []);
+
+  const handleBrewToday = () => {
+    if (hasBrewedToday) {
+      toast.info("You've already brewed today! Come back tomorrow.");
       return;
     }
+
+    // Update streak
+    const newStreak = currentStreak + 1;
+    setCurrentStreak(newStreak);
+    setHasBrewedToday(true);
     
-    // Check if we need to increment the streak
-    let newStreak = streak;
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayString = yesterday.toDateString();
+    // Update weekly progress
+    const newWeeklyProgress = [...weeklyProgress];
+    newWeeklyProgress[today] = true;
+    setWeeklyProgress(newWeeklyProgress);
     
-    if (lastBrewDate === yesterdayString || streak === 0) {
-      // Maintain or start streak
-      newStreak = streak + 1;
-    } else if (lastBrewDate !== today) {
-      // Broke the streak, start again
-      newStreak = 1;
-      toast.info("New streak started! Keep going!", { duration: 3000 });
-    }
+    // Save to localStorage
+    localStorage.setItem("dailyBrewStreak", newStreak.toString());
+    localStorage.setItem("lastBrewDate", new Date().toISOString());
+    localStorage.setItem("weeklyBrewProgress", JSON.stringify(newWeeklyProgress));
     
-    // Update state and localStorage
-    setStreak(newStreak);
-    setLastBrewDate(today);
-    setTodayBrewed(true);
+    // Add aroma points
+    const currentPoints = parseInt(localStorage.getItem("aromaPoints") || "0");
+    const newPoints = currentPoints + 50;
+    localStorage.setItem("aromaPoints", newPoints.toString());
     
-    localStorage.setItem("brewStreak", newStreak.toString());
-    localStorage.setItem("lastBrewDate", today);
-    
-    // Update UI
-    const updatedDays = streakDays.map(day => 
-      day.today ? { ...day, brewed: true } : day
-    );
-    setStreakDays(updatedDays);
-    
-    // Award points
-    toast.success(`Daily Coffee Brewed! +50 Aroma Points! Streak: ${newStreak} days`, {
-      duration: 3000
+    toast.success(`+50 Aroma Points • Keep your streak alive!`, {
+      duration: 3000,
     });
   };
-  
+
+  const getDayIcon = (dayIndex: number) => {
+    const isCompleted = weeklyProgress[dayIndex];
+    const isToday = dayIndex === today;
+    const isFuture = dayIndex > today;
+    
+    if (isCompleted) {
+      return (
+        <div className="w-10 h-10 bg-gradient-to-r from-amber-400 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
+          <Coffee className="w-5 h-5 text-white" />
+        </div>
+      );
+    } else if (isToday) {
+      return (
+        <div className="w-10 h-10 bg-amber-100 border-2 border-amber-400 rounded-full flex items-center justify-center animate-pulse">
+          <Coffee className="w-5 h-5 text-amber-600" />
+        </div>
+      );
+    } else if (isFuture) {
+      return (
+        <div className="w-10 h-10 bg-gray-100 border-2 border-gray-300 rounded-full flex items-center justify-center opacity-50">
+          <Coffee className="w-5 h-5 text-gray-400" />
+        </div>
+      );
+    } else {
+      // Past days not completed
+      return (
+        <div className="w-10 h-10 bg-gray-100 border-2 border-gray-300 rounded-full flex items-center justify-center">
+          <Coffee className="w-5 h-5 text-gray-400" />
+        </div>
+      );
+    }
+  };
+
+  const getStreakMessage = () => {
+    if (currentStreak === 1) return "Start your brewing journey!";
+    if (currentStreak < 7) return "Building momentum!";
+    if (currentStreak < 30) return "Great consistency!";
+    return "Coffee master level!";
+  };
+
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-amber-900">Daily Brew Streak</h3>
-        <div className="flex items-center space-x-1 text-amber-600">
-          <Star className="w-4 h-4 fill-current" />
-          <span className="text-sm font-medium">{streak} Days</span>
+    <Card className="p-6 bg-gradient-to-br from-amber-50 to-white">
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="relative">
+          <div className="p-2 bg-gradient-to-r from-amber-400 to-amber-600 rounded-lg">
+            <Flame className="w-6 h-6 text-white" />
+          </div>
+          <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">
+            {currentStreak}
+          </div>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-amber-900">Daily Brew Streak</h3>
+          <p className="text-sm text-muted-foreground">{getStreakMessage()}</p>
         </div>
       </div>
-      
-      <div className="grid grid-cols-7 gap-2 mb-6">
-        {streakDays.map((day, index) => (
-          <div key={index} className="text-center">
-            <div className="text-xs text-muted-foreground mb-1">{day.day}</div>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center mx-auto transition-all ${
-              day.today 
-                ? 'bg-amber-200 ring-2 ring-amber-400 animate-pulse' 
-                : day.brewed 
-                  ? 'bg-gradient-to-br from-amber-600 to-amber-800' 
-                  : 'bg-muted'
-            }`}>
-              {day.brewed && <Coffee className="w-4 h-4 text-white" />}
-              {day.today && !day.brewed && <Coffee className="w-4 h-4 text-amber-700" />}
+
+      {/* Weekly Progress */}
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-3">
+          {daysOfWeek.map((day, index) => (
+            <div key={day} className="flex flex-col items-center space-y-2">
+              <span className={`text-xs font-medium ${
+                index === today ? 'text-amber-600' : 'text-muted-foreground'
+              }`}>
+                {day}
+              </span>
+              {getDayIcon(index)}
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-      
-      <Button 
-        className="w-full bg-gradient-to-r from-amber-600 to-amber-800 hover:opacity-90 text-white font-medium"
-        onClick={handleDailyBrew}
-        disabled={todayBrewed}
-      >
-        {todayBrewed ? "✓ Brewed Today" : "☕ Brew Your Daily Coffee"}
-      </Button>
-      
-      <p className="text-xs text-center text-muted-foreground mt-2">
-        +50 Aroma Points • Keep your streak alive!
-      </p>
+
+      {/* Action Button */}
+      <div className="space-y-4">
+        <Button
+          onClick={handleBrewToday}
+          disabled={hasBrewedToday}
+          className={`w-full py-6 text-lg font-semibold transition-all duration-200 ${
+            hasBrewedToday
+              ? 'bg-green-100 text-green-700 border border-green-300 cursor-not-allowed'
+              : 'bg-gradient-to-r from-amber-400 to-amber-600 hover:from-amber-500 hover:to-amber-700 text-white shadow-lg hover:shadow-xl'
+          }`}
+        >
+          {hasBrewedToday ? (
+            <div className="flex items-center justify-center space-x-2">
+              <span>✅ Brewed Today</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center space-x-2">
+              <Coffee className="w-5 h-5" />
+              <span>Brew Today</span>
+            </div>
+          )}
+        </Button>
+
+        {hasBrewedToday && (
+          <div className="text-center p-4 bg-amber-100 rounded-lg">
+            <div className="flex items-center justify-center space-x-2 mb-2">
+              <Star className="w-5 h-5 text-amber-600" />
+              <span className="font-semibold text-amber-800">+50 Aroma Points • Keep your streak alive!</span>
+            </div>
+            <p className="text-sm text-amber-700">
+              Come back tomorrow to continue your brewing journey!
+            </p>
+          </div>
+        )}
+
+        {!hasBrewedToday && (
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Check back tomorrow to continue your streak!
+            </p>
+          </div>
+        )}
+      </div>
     </Card>
   );
 };

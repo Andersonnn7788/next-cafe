@@ -136,7 +136,7 @@ const PodMatch = () => {
         }, 1000);
       }
     }
-  }, [flippedCards.length, cards, moves, matchedPairs]);
+  }, [flippedCards, cards, moves, matchedPairs]);
 
   // Check for game completion
   useEffect(() => {

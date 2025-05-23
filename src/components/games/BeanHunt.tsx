@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Star } from "lucide-react";
@@ -37,8 +37,8 @@ const BeanHunt = () => {
     lastBeanTime.current = Date.now();
   };
 
-  // End the game
-  const endGame = () => {
+  // End the game - wrapped in useCallback to prevent dependency issues
+  const endGame = useCallback(() => {
     setGameActive(false);
     toast.success(`Game Over! You scored ${score} points!`);
     
@@ -51,7 +51,7 @@ const BeanHunt = () => {
     });
     leaderboard.sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.score - a.score);
     localStorage.setItem('beanHuntLeaderboard', JSON.stringify(leaderboard.slice(0, 10)));
-  };
+  }, [score]);
 
   // Handle moving the basket with mouse/touch
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
