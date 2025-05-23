@@ -1,4 +1,3 @@
-
 import { Coffee, Bell, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -8,19 +7,19 @@ const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-coffee-gradient rounded-xl">
+            <div className="p-2 bg-gradient-to-br from-amber-600 to-amber-800 rounded-xl">
               <Coffee className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-display font-bold text-coffee-dark">NESCAFÉ</h1>
+              <h1 className="text-xl font-bold text-amber-900">NESCAFÉ</h1>
               <p className="text-xs text-muted-foreground">Your Coffee Journey</p>
             </div>
           </div>
           
           <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2 bg-coffee-light px-3 py-2 rounded-full">
-              <Star className="w-4 h-4 text-coffee-gold" />
-              <span className="text-sm font-semibold text-coffee-dark">1,250</span>
+            <div className="flex items-center space-x-2 bg-amber-100 px-3 py-2 rounded-full">
+              <Star className="w-4 h-4 text-amber-600" />
+              <span className="text-sm font-semibold text-amber-900">1,250</span>
               <span className="text-xs text-muted-foreground">Aroma Points</span>
             </div>
             

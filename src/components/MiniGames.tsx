@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -49,7 +48,7 @@ const MiniGames = () => {
   return (
     <>
       <Card className="p-6">
-        <h3 className="text-lg font-semibold text-coffee-dark mb-4">Daily Mini-Games</h3>
+        <h3 className="text-lg font-semibold text-amber-900 mb-4">Daily Mini-Games</h3>
         
         <div className="space-y-3">
           {games.map((game) => (
@@ -58,7 +57,7 @@ const MiniGames = () => {
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl">{game.emoji}</span>
                   <div>
-                    <h4 className="font-medium text-coffee-dark">{game.title}</h4>
+                    <h4 className="font-medium text-amber-900">{game.title}</h4>
                     <p className="text-sm text-muted-foreground">{game.description}</p>
                   </div>
                 </div>
@@ -76,7 +75,7 @@ const MiniGames = () => {
                   <Badge variant="outline" className="text-xs">{game.difficulty}</Badge>
                   <Badge variant="outline" className="text-xs">{game.playTime}</Badge>
                 </div>
-                <span className="text-coffee-gold font-medium">{game.reward}</span>
+                <span className="text-amber-600 font-medium">{game.reward}</span>
               </div>
             </div>
           ))}

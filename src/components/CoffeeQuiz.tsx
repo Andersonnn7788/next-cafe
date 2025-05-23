@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -134,35 +133,35 @@ const CoffeeQuiz = () => {
   const currentQuestion = coffeeQuizQuestions[currentQuestionIndex];
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-coffee-light to-white">
+    <Card className="p-6 bg-gradient-to-br from-amber-50 to-white">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-coffee-dark">Coffee Knowledge Quiz</h3>
+        <h3 className="text-lg font-semibold text-amber-900">Coffee Knowledge Quiz</h3>
         <span className="text-sm text-muted-foreground">Daily Challenge</span>
       </div>
       
       <div className="mb-4">
         <div className="flex justify-between text-sm mb-2">
           <span className="text-muted-foreground">Today's Progress</span>
-          <span className="text-coffee-dark font-medium">{todayProgress}/{coffeeQuizQuestions.length} Questions</span>
+          <span className="text-amber-900 font-medium">{todayProgress}/{coffeeQuizQuestions.length} Questions</span>
         </div>
         <Progress value={progressPercentage} className="h-2" />
       </div>
       
       {quizCompleted ? (
-        <div className="bg-white rounded-lg p-6 border border-coffee-cream mb-4 text-center">
-          <h4 className="font-medium text-coffee-dark mb-3">Quiz Completed!</h4>
+        <div className="bg-white rounded-lg p-6 border border-amber-200 mb-4 text-center">
+          <h4 className="font-medium text-amber-900 mb-3">Quiz Completed!</h4>
           <p className="text-muted-foreground mb-4">You've answered all of today's coffee questions.</p>
           <Button 
             variant="outline" 
-            className="w-full border-coffee-gold text-coffee-dark hover:bg-coffee-cream/20"
+            className="w-full border-amber-600 text-amber-900 hover:bg-amber-50"
             onClick={resetQuiz}
           >
             Check Back Tomorrow
           </Button>
         </div>
       ) : (
-        <div className="bg-white rounded-lg p-4 border border-coffee-cream mb-4">
-          <h4 className="font-medium text-coffee-dark mb-3">
+        <div className="bg-white rounded-lg p-4 border border-amber-200 mb-4">
+          <h4 className="font-medium text-amber-900 mb-3">
             {currentQuestion.question}
           </h4>
           
@@ -178,7 +177,7 @@ const CoffeeQuiz = () => {
                       : "bg-red-100 border-red-500 hover:bg-red-100"
                     : isAnswered && index === currentQuestion.correctAnswer
                     ? "bg-green-100 border-green-500 hover:bg-green-100"
-                    : "hover:bg-coffee-cream/50"
+                    : "hover:bg-amber-50"
                 }`}
                 size="sm"
                 onClick={() => handleOptionSelect(index)}
@@ -190,18 +189,18 @@ const CoffeeQuiz = () => {
           </div>
           
           {showExplanation && (
-            <div className="mt-4 p-3 bg-coffee-cream/20 rounded text-sm">
+            <div className="mt-4 p-3 bg-amber-100 rounded text-sm">
               <p className="font-medium mb-1">Explanation:</p>
               <p>{currentQuestion.explanation}</p>
+              {selectedOption === currentQuestion.correctAnswer && (
+                <p className="mt-2 font-medium">
+                  <span className="text-amber-600 font-medium">+{score} Aroma Points</span>
+                </p>
+              )}
             </div>
           )}
         </div>
       )}
-      
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">Your current score</span>
-        <span className="text-coffee-gold font-medium">+{score} Aroma Points</span>
-      </div>
     </Card>
   );
 };

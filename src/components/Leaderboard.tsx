@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -52,25 +51,17 @@ const generateRandomEntries = (game: string, count: number): LeaderboardEntry[] 
   return entries.sort((a, b) => b.score - a.score);
 };
 
-const mergeAndSortEntries = (savedEntries: LeaderboardEntry[], demoEntries: LeaderboardEntry[]): LeaderboardEntry[] => {
-  // Add usernames to saved entries if they don't have them
-  const enhancedSavedEntries = savedEntries.map(entry => {
-    if (!entry.username) {
-      const username = demoUsernames[Math.floor(Math.random() * demoUsernames.length)];
-      const avatar = demoAvatars[Math.floor(Math.random() * demoAvatars.length)];
-      return {
-        ...entry,
-        username: "You",
-        avatar: "🌟"
-      };
-    }
-    return entry;
-  });
+const mergeAndSortEntries = (userEntries: LeaderboardEntry[], demoEntries: LeaderboardEntry[]): LeaderboardEntry[] => {
+  // Mark user entries with "You" username for highlighting
+  const processedUserEntries = userEntries.map(entry => ({
+    ...entry,
+    username: "You",
+    avatar: "👤"
+  }));
   
   // Combine and sort by score
-  return [...enhancedSavedEntries, ...demoEntries]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 10);
+  const allEntries = [...processedUserEntries, ...demoEntries];
+  return allEntries.sort((a, b) => b.score - a.score).slice(0, 10);
 };
 
 const Leaderboard = () => {
@@ -136,22 +127,26 @@ const Leaderboard = () => {
     }
   };
 
+  const games = ["bean-hunt", "pod-match", "brew-master", "coffee-quiz"];
+
   return (
     <Card className="p-6">
-      <div className="flex items-center space-x-3 mb-6">
-        <Trophy className="w-6 h-6 text-coffee-gold" />
-        <h3 className="text-lg font-semibold text-coffee-dark">Leaderboard</h3>
+      <div className="flex items-center space-x-3 mb-4">
+        <Trophy className="w-6 h-6 text-amber-600" />
+        <h3 className="text-lg font-semibold text-amber-900">Leaderboard</h3>
       </div>
       
-      <Tabs defaultValue="bean-hunt" onValueChange={setActiveTab}>
-        <TabsList className="w-full mb-4">
-          <TabsTrigger value="bean-hunt" className="flex-1">Bean Hunt</TabsTrigger>
-          <TabsTrigger value="pod-match" className="flex-1">Pod Match</TabsTrigger>
-          <TabsTrigger value="brew-master" className="flex-1">Brew Master</TabsTrigger>
-          <TabsTrigger value="coffee-quiz" className="flex-1">Coffee Quiz</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="bean-hunt">Bean Hunt</TabsTrigger>
+          <TabsTrigger value="pod-match">Pod Match</TabsTrigger>
+        </TabsList>
+        <TabsList className="grid w-full grid-cols-2 mb-4">
+          <TabsTrigger value="brew-master">Brew Master</TabsTrigger>
+          <TabsTrigger value="coffee-quiz">Coffee Quiz</TabsTrigger>
         </TabsList>
         
-        {["bean-hunt", "pod-match", "brew-master", "coffee-quiz"].map(game => (
+        {games.map(game => (
           <TabsContent key={game} value={game}>
             <div className="max-h-[300px] overflow-y-auto">
               <Table>
@@ -167,9 +162,9 @@ const Leaderboard = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {getEntriesForActiveTab().length > 0 ? (
+                  {getEntriesForActiveTab().length > 0 ?
                     getEntriesForActiveTab().map((entry, index) => (
-                      <TableRow key={index} className={entry.username === "You" ? "bg-coffee-cream/10" : ""}>
+                      <TableRow key={index} className={entry.username === "You" ? "bg-amber-50" : ""}>
                         <TableCell>
                           {getRankLabel(index)}
                         </TableCell>
@@ -198,10 +193,10 @@ const Leaderboard = () => {
                         </TableCell>
                       </TableRow>
                     ))
-                  ) : (
+                  : (
                     <TableRow>
-                      <TableCell colSpan={game === "pod-match" ? 6 : 4} className="text-center py-4 text-muted-foreground">
-                        No scores yet. Play a game to be the first on the leaderboard!
+                      <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        No entries yet. Play a game to get on the leaderboard!
                       </TableCell>
                     </TableRow>
                   )}

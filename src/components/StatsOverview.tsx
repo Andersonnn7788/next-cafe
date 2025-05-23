@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Star, Coffee, Gift, Book } from "lucide-react";
 
@@ -9,14 +8,14 @@ const StatsOverview = () => {
       label: "Aroma Points",
       value: "1,250",
       change: "+50 today",
-      color: "text-coffee-gold"
+      color: "text-amber-600"
     },
     {
       icon: Coffee,
       label: "Brews This Week",
       value: "12",
       change: "+2 from last week",
-      color: "text-coffee-bean"
+      color: "text-amber-800"
     },
     {
       icon: Gift,
@@ -42,7 +41,7 @@ const StatsOverview = () => {
             <stat.icon className={`w-5 h-5 ${stat.color}`} />
             <span className="text-sm text-muted-foreground">{stat.label}</span>
           </div>
-          <div className="text-2xl font-bold text-coffee-dark mb-1">{stat.value}</div>
+          <div className="text-2xl font-bold text-amber-900 mb-1">{stat.value}</div>
           <div className="text-xs text-muted-foreground">{stat.change}</div>
         </Card>
       ))}

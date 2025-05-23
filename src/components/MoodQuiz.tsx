@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -173,9 +172,9 @@ const MoodQuiz = () => {
   };
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-coffee-light to-white">
+    <Card className="p-6 bg-gradient-to-br from-amber-50 to-white">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-coffee-dark">Coffee Mood Quiz</h3>
+        <h3 className="text-lg font-semibold text-amber-900">Coffee Mood Quiz</h3>
         <span className="text-sm text-muted-foreground">Personalized Match</span>
       </div>
       
@@ -184,7 +183,7 @@ const MoodQuiz = () => {
           <div className="mb-4">
             <div className="flex justify-between text-sm mb-2">
               <span className="text-muted-foreground">Progress</span>
-              <span className="text-coffee-dark font-medium">
+              <span className="text-amber-900 font-medium">
                 {currentQuestionIndex + 1}/{questions.length} Questions
               </span>
             </div>
@@ -194,8 +193,8 @@ const MoodQuiz = () => {
             />
           </div>
           
-          <div className="bg-white rounded-lg p-4 border border-coffee-cream mb-4">
-            <h4 className="font-medium text-coffee-dark mb-3">
+          <div className="bg-white rounded-lg p-4 border border-amber-200 mb-4">
+            <h4 className="font-medium text-amber-900 mb-3">
               {questions[currentQuestionIndex].text}
             </h4>
             
@@ -204,7 +203,7 @@ const MoodQuiz = () => {
                 <Button
                   key={index}
                   variant="outline"
-                  className="w-full justify-start text-left hover:bg-coffee-cream/50"
+                  className="w-full justify-start text-left hover:bg-amber-50"
                   size="sm"
                   onClick={() => handleAnswer(option.mood)}
                 >
@@ -220,7 +219,7 @@ const MoodQuiz = () => {
             <div className="flex items-center space-x-2 mb-3">
               <span className="text-2xl">{result?.emoji}</span>
               <div>
-                <p className="font-medium text-coffee-dark">Feeling {result?.mood}</p>
+                <p className="font-medium text-amber-900">Feeling {result?.mood}</p>
                 <p className="text-sm text-muted-foreground">Perfect match found</p>
               </div>
             </div>
@@ -228,11 +227,11 @@ const MoodQuiz = () => {
           
           <div className="bg-white/70 rounded-lg p-4 mb-4">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="w-12 h-12 bg-coffee-gradient rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-600 to-amber-800 rounded-full flex items-center justify-center">
                 <span className="text-white text-xl">☕</span>
               </div>
               <div>
-                <h4 className="font-semibold text-coffee-dark">{result?.title}</h4>
+                <h4 className="font-semibold text-amber-900">{result?.title}</h4>
                 <p className="text-sm text-muted-foreground">{result?.description}</p>
               </div>
             </div>
@@ -241,7 +240,7 @@ const MoodQuiz = () => {
               {result?.characteristics.map((trait, index) => (
                 <span 
                   key={index} 
-                  className="px-2 py-1 bg-coffee-cream/50 rounded-full text-xs"
+                  className="px-2 py-1 bg-amber-100 rounded-full text-xs"
                 >
                   {trait}
                 </span>
@@ -250,7 +249,7 @@ const MoodQuiz = () => {
             
             <Button 
               size="sm" 
-              className="w-full bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark mt-2"
+              className="w-full bg-amber-600 hover:bg-amber-700 text-white mt-2"
             >
               Try This Recipe (+25 Points)
             </Button>
