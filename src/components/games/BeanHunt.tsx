@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -11,6 +10,12 @@ interface Bean {
   speed: number;
   type: 'regular' | 'golden' | 'dark';
   points: number;
+}
+
+interface LeaderboardEntry {
+  score: number;
+  date: string;
+  game: string;
 }
 
 const BeanHunt = () => {
@@ -38,13 +43,13 @@ const BeanHunt = () => {
     toast.success(`Game Over! You scored ${score} points!`);
     
     // Update leaderboard in localStorage
-    const leaderboard = JSON.parse(localStorage.getItem('beanHuntLeaderboard') || '[]');
+    const leaderboard: LeaderboardEntry[] = JSON.parse(localStorage.getItem('beanHuntLeaderboard') || '[]');
     leaderboard.push({
       score,
       date: new Date().toISOString(),
       game: 'Bean Hunt'
     });
-    leaderboard.sort((a: any, b: any) => b.score - a.score);
+    leaderboard.sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.score - a.score);
     localStorage.setItem('beanHuntLeaderboard', JSON.stringify(leaderboard.slice(0, 10)));
   };
 
@@ -150,20 +155,20 @@ const BeanHunt = () => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [gameActive, basket]);
+  }, [gameActive, basket, endGame]);
 
   return (
     <div className="w-full h-full">
       {!gameActive ? (
         <div className="flex flex-col items-center justify-center h-full space-y-4 p-4">
           <div className="text-5xl mb-2">☕</div>
-          <h2 className="text-xl font-semibold text-coffee-dark">Bean Hunt</h2>
+          <h2 className="text-xl font-semibold text-amber-900">Bean Hunt</h2>
           <p className="text-sm text-muted-foreground text-center">
             Catch falling coffee beans to earn points! Golden beans are worth more!
           </p>
           <Button
             onClick={startGame}
-            className="bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark mt-4"
+            className="bg-amber-600 hover:bg-amber-700 text-white mt-4"
           >
             Start Game
           </Button>
@@ -171,14 +176,14 @@ const BeanHunt = () => {
       ) : (
         <div 
           ref={gameAreaRef} 
-          className="relative w-full h-96 bg-coffee-cream/30 rounded-lg overflow-hidden cursor-none"
+          className="relative w-full h-96 bg-amber-100 rounded-lg overflow-hidden cursor-none"
           onMouseMove={handleMouseMove}
           onTouchMove={handleTouchMove}
         >
           {/* Score and time */}
-          <div className="absolute top-2 left-2 right-2 flex justify-between px-2 py-1 bg-coffee-dark/30 rounded-md text-white z-10">
+          <div className="absolute top-2 left-2 right-2 flex justify-between px-2 py-1 bg-amber-900/80 rounded-md text-white z-10">
             <div className="flex items-center">
-              <Star className="w-4 h-4 text-coffee-gold mr-1" />
+              <Star className="w-4 h-4 text-amber-400 mr-1" />
               <span>{score}</span>
             </div>
             <div>Time: {timeLeft}s</div>
@@ -190,7 +195,7 @@ const BeanHunt = () => {
               key={bean.id}
               className={`absolute w-6 h-6 flex items-center justify-center rounded-full transform -translate-x-1/2 -translate-y-1/2 
               ${bean.type === 'golden' ? 'text-yellow-400' : 
-                 bean.type === 'dark' ? 'text-coffee-dark' : 'text-coffee-bean'}`}
+                 bean.type === 'dark' ? 'text-amber-900' : 'text-amber-800'}`}
               style={{
                 left: `${bean.x}%`,
                 top: `${bean.y}%`
@@ -202,7 +207,7 @@ const BeanHunt = () => {
           
           {/* Basket */}
           <div 
-            className="absolute bottom-0 h-8 bg-coffee-gold/70 rounded-t-lg border-t-2 border-x-2 border-coffee-dark"
+            className="absolute bottom-0 h-8 bg-amber-600 rounded-t-lg border-t-2 border-x-2 border-amber-800"
             style={{
               left: `${basket.x}%`,
               width: `${basket.width}%`

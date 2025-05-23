@@ -30,7 +30,7 @@ const generateRandomEntries = (game: string, count: number): LeaderboardEntry[] 
     const date = new Date();
     date.setDate(date.getDate() - Math.floor(Math.random() * 10));
     
-    let entry: LeaderboardEntry = {
+    const entry: LeaderboardEntry = {
       score: Math.floor(Math.random() * 100) + 50,
       date: date.toISOString(),
       game,

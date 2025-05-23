@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,6 +9,14 @@ interface PodCard {
   emoji: string;
   flipped: boolean;
   matched: boolean;
+}
+
+interface LeaderboardEntry {
+  score: number;
+  moves: number;
+  timeLeft: number;
+  date: string;
+  game: string;
 }
 
 const podTypes = [
@@ -33,7 +40,7 @@ const PodMatch = () => {
   const initializeGame = () => {
     // Get 6 pod types and duplicate them to create pairs
     const gamePods = podTypes.slice(0, 6);
-    let newCards: PodCard[] = [];
+    const newCards: PodCard[] = [];
     
     // Create pairs of pods
     gamePods.forEach((pod, index) => {
@@ -129,7 +136,7 @@ const PodMatch = () => {
         }, 1000);
       }
     }
-  }, [flippedCards.length]);
+  }, [flippedCards.length, cards, moves, matchedPairs]);
 
   // Check for game completion
   useEffect(() => {
@@ -141,7 +148,7 @@ const PodMatch = () => {
       setGameActive(false);
       
       // Save to leaderboard
-      const leaderboard = JSON.parse(localStorage.getItem('podMatchLeaderboard') || '[]');
+      const leaderboard: LeaderboardEntry[] = JSON.parse(localStorage.getItem('podMatchLeaderboard') || '[]');
       leaderboard.push({
         score,
         moves,
@@ -149,10 +156,10 @@ const PodMatch = () => {
         date: new Date().toISOString(),
         game: 'Pod Match'
       });
-      leaderboard.sort((a: any, b: any) => b.score - a.score);
+      leaderboard.sort((a: LeaderboardEntry, b: LeaderboardEntry) => b.score - a.score);
       localStorage.setItem('podMatchLeaderboard', JSON.stringify(leaderboard.slice(0, 10)));
     }
-  }, [matchedPairs]);
+  }, [matchedPairs, gameActive, moves, timeLeft]);
 
   // Timer countdown
   useEffect(() => {
@@ -178,13 +185,13 @@ const PodMatch = () => {
       {!gameActive ? (
         <div className="flex flex-col items-center justify-center h-full space-y-4 p-4">
           <div className="text-5xl mb-2">🧩</div>
-          <h2 className="text-xl font-semibold text-coffee-dark">Pod Match</h2>
+          <h2 className="text-xl font-semibold text-amber-900">Pod Match</h2>
           <p className="text-sm text-muted-foreground text-center">
             Match pairs of coffee pods to earn points! Faster matches give higher scores.
           </p>
           <Button
             onClick={initializeGame}
-            className="bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark mt-4"
+            className="bg-amber-600 hover:bg-amber-700 text-white mt-4"
           >
             Start Game
           </Button>
@@ -192,7 +199,7 @@ const PodMatch = () => {
       ) : (
         <div className="w-full">
           {/* Game info */}
-          <div className="flex justify-between mb-4 px-2 py-1 bg-coffee-dark/10 rounded-md">
+          <div className="flex justify-between mb-4 px-2 py-1 bg-amber-100 rounded-md">
             <div>Moves: {moves}</div>
             <div>Pairs: {matchedPairs}/6</div>
             <div>Time: {timeLeft}s</div>
@@ -205,7 +212,7 @@ const PodMatch = () => {
                 key={card.id}
                 onClick={() => handleCardClick(card.id)}
                 className={`aspect-square flex items-center justify-center text-3xl cursor-pointer transition-all transform ${
-                  card.flipped || card.matched ? 'bg-coffee-cream' : 'bg-coffee-dark'
+                  card.flipped || card.matched ? 'bg-amber-100' : 'bg-amber-800'
                 } ${
                   card.matched ? 'opacity-70' : 'opacity-100'
                 } hover:scale-[1.02]`}
