@@ -6,7 +6,7 @@ import MoodCoffeeMatch from "@/components/MoodCoffeeMatch";
 import MiniGames from "@/components/MiniGames";
 import CoffeeQuiz from "@/components/CoffeeQuiz";
 import StatsOverview from "@/components/StatsOverview";
-import AICoffeeAssistant from "@/components/AICoffeeAssistant";
+import FloatingChatbot from "@/components/FloatingChatbot";
 
 const Index = () => {
   return (
@@ -44,19 +44,16 @@ const Index = () => {
           {/* Middle Column */}
           <div className="lg:col-span-1 space-y-6">
             <div className="animate-slide-up" style={{ animationDelay: '0.3s' }}>
-              <AICoffeeAssistant />
-            </div>
-            <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <MoodCoffeeMatch />
             </div>
-            <div className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
+            <div className="animate-slide-up" style={{ animationDelay: '0.4s' }}>
               <MiniGames />
             </div>
           </div>
 
           {/* Right Column */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="animate-slide-up" style={{ animationDelay: '0.6s' }}>
+            <div className="animate-slide-up" style={{ animationDelay: '0.5s' }}>
               <CoffeeQuiz />
             </div>
           </div>
@@ -69,6 +66,9 @@ const Index = () => {
           </p>
         </div>
       </main>
+
+      {/* Floating Chatbot */}
+      <FloatingChatbot />
     </div>
   );
 };
