@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -62,11 +61,11 @@ const AvatarCustomization = () => {
   ];
 
   const backgrounds = [
-    { id: "beans", name: "Coffee Beans", color: "bg-gradient-to-br from-coffee-bean to-coffee-dark" },
-    { id: "cream", name: "Cream Swirl", color: "bg-gradient-to-br from-coffee-cream to-coffee-light" },
-    { id: "gold", name: "Golden Hour", color: "bg-gradient-to-br from-coffee-gold to-amber-400" },
-    { id: "gradient", name: "Coffee Gradient", color: "coffee-gradient" },
-    { id: "mocha", name: "Mocha Swirl", color: "bg-gradient-to-br from-amber-800 to-coffee-dark" },
+    { id: "beans", name: "Coffee Beans", color: "bg-gradient-to-br from-amber-800 to-amber-900" },
+    { id: "cream", name: "Cream Swirl", color: "bg-gradient-to-br from-amber-100 to-amber-200" },
+    { id: "gold", name: "Golden Hour", color: "bg-gradient-to-br from-yellow-400 to-amber-400" },
+    { id: "gradient", name: "Coffee Gradient", color: "bg-gradient-to-br from-amber-600 to-amber-800" },
+    { id: "mocha", name: "Mocha Swirl", color: "bg-gradient-to-br from-amber-800 to-amber-900" },
     { id: "mint", name: "Mint Fresh", color: "bg-gradient-to-br from-emerald-300 to-teal-700" }
   ];
 
@@ -74,15 +73,15 @@ const AvatarCustomization = () => {
     { id: "none", name: "None" },
     { id: "circle", name: "Circle", class: "rounded-full" },
     { id: "square", name: "Square", class: "rounded-lg" },
-    { id: "hexagon", name: "Hexagon", class: "hexagon" },
-    { id: "coffee-bean", name: "Bean Shape", class: "coffee-bean-shape" }
+    { id: "hexagon", name: "Hexagon", class: "rounded-lg" },
+    { id: "coffee-bean", name: "Bean Shape", class: "rounded-full" }
   ];
 
   const vibeOptions = [
     { id: "energetic", name: "Energetic", effect: "animate-bounce", intensity: "slow" },
     { id: "chill", name: "Chill", effect: "animate-pulse", intensity: "very-slow" },
     { id: "excited", name: "Excited", effect: "animate-spin", intensity: "slow" },
-    { id: "zen", name: "Zen", effect: "hover-glow", intensity: "medium" }
+    { id: "zen", name: "Zen", effect: "hover:scale-105", intensity: "medium" }
   ];
 
   // Helper functions to get current selections
@@ -128,12 +127,6 @@ const AvatarCustomization = () => {
     toast.success("Avatar customization saved! +50 Aroma Points", {
       duration: 2000
     });
-    
-    // Here you would typically update a user profile with the new selections
-    // and award points to the user
-    
-    // For this demo, we'll just close the customization dialog or update the parent component
-    // by triggering a callback, etc.
   };
 
   // Get dynamic styles for avatar preview
@@ -152,8 +145,8 @@ const AvatarCustomization = () => {
   return (
     <Card className="p-6">
       <div className="flex items-center space-x-3 mb-6">
-        <Palette className="w-6 h-6 text-coffee-gold" />
-        <h3 className="text-lg font-semibold text-coffee-dark">Customize Your Coffee Avatar</h3>
+        <Palette className="w-6 h-6 text-amber-600" />
+        <h3 className="text-lg font-semibold text-amber-900">Customize Your Coffee Avatar</h3>
       </div>
 
       {/* Avatar Preview */}
@@ -167,26 +160,26 @@ const AvatarCustomization = () => {
             transition: "all 0.3s ease-in-out"
           }}
         >
-          <div className={`w-full h-full ${currentBackground?.color || "bg-coffee-gradient"} flex items-center justify-center`}>
+          <div className={`w-full h-full ${currentBackground?.color || "bg-gradient-to-br from-amber-600 to-amber-800"} flex items-center justify-center`}>
             <span className="text-4xl">{currentAvatar?.emoji}</span>
           </div>
           
           {currentAccessory && (
             <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
-              {React.createElement(currentAccessory.icon, { className: "w-4 h-4 text-coffee-gold" })}
+              {React.createElement(currentAccessory.icon, { className: "w-4 h-4 text-amber-600" })}
             </div>
           )}
         </div>
       </div>
 
       <div className="text-center mb-6">
-        <h4 className="font-semibold text-coffee-dark">{currentAvatar?.name}</h4>
+        <h4 className="font-semibold text-amber-900">{currentAvatar?.name}</h4>
         <Badge variant="secondary" className="mt-1 text-xs">
           {currentAvatar?.trait}
         </Badge>
       </div>
 
-      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="mb-6">
+      <Tabs defaultValue="style" className="w-full">
         <TabsList className="w-full">
           <TabsTrigger value="style">Style</TabsTrigger>
           <TabsTrigger value="accessories">Accessories</TabsTrigger>
@@ -196,14 +189,14 @@ const AvatarCustomization = () => {
         <TabsContent value="style" className="pt-4">
           {/* Style Selection */}
           <div className="mb-6">
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Personality Style</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Personality Style</label>
             <div className="grid grid-cols-2 gap-2">
               {avatarStyles.map((style) => (
                 <Button
                   key={style.id}
                   variant={selectedStyle === style.id ? "default" : "outline"}
                   className={`h-auto p-3 ${
-                    selectedStyle === style.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""
+                    selectedStyle === style.id ? "bg-amber-600 hover:bg-amber-700 text-white" : ""
                   }`}
                   onClick={() => setSelectedStyle(style.id)}
                 >
@@ -218,14 +211,14 @@ const AvatarCustomization = () => {
 
           {/* Background Selection */}
           <div>
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Background</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Background</label>
             <div className="grid grid-cols-3 gap-2">
               {backgrounds.map((background) => (
                 <Button
                   key={background.id}
                   variant={selectedBackground === background.id ? "default" : "outline"}
                   className={`h-12 ${
-                    selectedBackground === background.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""
+                    selectedBackground === background.id ? "bg-amber-600 hover:bg-amber-700 text-white" : ""
                   }`}
                   onClick={() => setSelectedBackground(background.id)}
                 >
@@ -240,14 +233,14 @@ const AvatarCustomization = () => {
         <TabsContent value="accessories" className="pt-4">
           {/* Accessory Selection */}
           <div className="mb-6">
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Accessory</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Accessory</label>
             <div className="grid grid-cols-4 gap-2">
               {accessories.map((accessory) => (
                 <Button
                   key={accessory.id}
                   variant={selectedAccessory === accessory.id ? "default" : "outline"}
                   size="sm"
-                  className={selectedAccessory === accessory.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""}
+                  className={selectedAccessory === accessory.id ? "bg-amber-600 hover:bg-amber-700 text-white" : ""}
                   onClick={() => setSelectedAccessory(accessory.id)}
                 >
                   {React.createElement(accessory.icon, { className: "w-4 h-4" })}
@@ -258,14 +251,14 @@ const AvatarCustomization = () => {
           
           {/* Frame Selection */}
           <div>
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Frame Style</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Frame Style</label>
             <div className="grid grid-cols-2 gap-2">
               {frameStyles.map((frame) => (
                 <Button
                   key={frame.id}
                   variant={frameStyle === frame.id ? "default" : "outline"}
                   className={`${
-                    frameStyle === frame.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""
+                    frameStyle === frame.id ? "bg-amber-600 hover:bg-amber-700 text-white" : ""
                   }`}
                   onClick={() => setFrameStyle(frame.id)}
                 >
@@ -279,7 +272,7 @@ const AvatarCustomization = () => {
         <TabsContent value="advanced" className="pt-4">
           {/* Size Adjustment */}
           <div className="mb-6">
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Avatar Size</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Avatar Size</label>
             <Slider
               value={[beanSize]}
               min={40}
@@ -296,7 +289,7 @@ const AvatarCustomization = () => {
           
           {/* Rotation Adjustment */}
           <div className="mb-6">
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Rotation</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Rotation</label>
             <Slider
               value={[avatarRotation]}
               min={-180}
@@ -313,14 +306,14 @@ const AvatarCustomization = () => {
           
           {/* Animation/Vibe Selection */}
           <div>
-            <label className="text-sm font-medium text-coffee-dark mb-3 block">Animation Style</label>
+            <label className="text-sm font-medium text-amber-900 mb-3 block">Animation Style</label>
             <div className="grid grid-cols-2 gap-2">
               {vibeOptions.map((vibe) => (
                 <Button
                   key={vibe.id}
                   variant={avatarVibe === vibe.id ? "default" : "outline"}
                   className={`${
-                    avatarVibe === vibe.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""
+                    avatarVibe === vibe.id ? "bg-amber-600 hover:bg-amber-700 text-white" : ""
                   }`}
                   onClick={() => setAvatarVibe(vibe.id)}
                 >
@@ -336,7 +329,7 @@ const AvatarCustomization = () => {
       </Tabs>
 
       <Button 
-        className="w-full bg-coffee-gradient hover:opacity-90 text-white"
+        className="w-full bg-gradient-to-r from-amber-600 to-amber-800 hover:opacity-90 text-white mt-4"
         onClick={saveAvatar}
       >
         Save Avatar (+50 Aroma Points)

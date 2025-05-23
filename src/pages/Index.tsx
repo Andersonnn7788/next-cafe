@@ -1,4 +1,3 @@
-
 import Header from "@/components/Header";
 import CoffeeAvatar from "@/components/CoffeeAvatar";
 import DailyBrewStreak from "@/components/DailyBrewStreak";
@@ -11,13 +10,13 @@ import Leaderboard from "@/components/Leaderboard";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-coffee-light via-background to-coffee-cream">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-background to-amber-100">
       <Header />
       
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Welcome Section */}
         <div className="text-center mb-8 animate-fade-in">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-coffee-dark mb-2">
+          <h2 className="text-3xl md:text-4xl font-bold text-amber-900 mb-2">
             Welcome Back, Coffee Explorer! ☕
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -31,7 +30,7 @@ const Index = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column */}
           <div className="lg:col-span-1 space-y-6">
             <div className="animate-slide-up" style={{ animationDelay: '0.1s' }}>

@@ -9,12 +9,12 @@ const CoffeeAvatar = () => {
   const [showCustomization, setShowCustomization] = useState(false);
 
   return (
-    <Card className="p-6 coffee-gradient text-white relative overflow-hidden">
+    <Card className="p-6 bg-gradient-to-br from-amber-600 to-amber-800 text-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
       <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
       
       <div className="relative z-10">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm relative">
               <span className="text-2xl">☕</span>
@@ -23,7 +23,7 @@ const CoffeeAvatar = () => {
               </div>
             </div>
             <div>
-              <h3 className="text-xl font-display font-bold">Espresso Explorer</h3>
+              <h3 className="text-xl font-bold">Espresso Explorer</h3>
               <p className="text-white/80 text-sm">Level 12 • Bold & Adventurous</p>
               <div className="flex items-center space-x-2 mt-1">
                 <div className="flex items-center space-x-1 text-xs">
@@ -54,7 +54,7 @@ const CoffeeAvatar = () => {
           </div>
         </div>
         
-        <Popover open={showCustomization} onOpenChange={setShowCustomization}>
+        <Popover>
           <PopoverTrigger asChild>
             <Button variant="secondary" className="w-full bg-white/20 hover:bg-white/30 text-white border-white/30">
               Customize Avatar

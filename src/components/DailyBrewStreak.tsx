@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -99,8 +98,8 @@ const DailyBrewStreak = () => {
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-coffee-dark">Daily Brew Streak</h3>
-        <div className="flex items-center space-x-1 text-coffee-gold">
+        <h3 className="text-lg font-semibold text-amber-900">Daily Brew Streak</h3>
+        <div className="flex items-center space-x-1 text-amber-600">
           <Star className="w-4 h-4 fill-current" />
           <span className="text-sm font-medium">{streak} Days</span>
         </div>
@@ -110,26 +109,26 @@ const DailyBrewStreak = () => {
         {streakDays.map((day, index) => (
           <div key={index} className="text-center">
             <div className="text-xs text-muted-foreground mb-1">{day.day}</div>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center mx-auto ${
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center mx-auto transition-all ${
               day.today 
-                ? 'bg-accent pulse-glow' 
+                ? 'bg-amber-200 ring-2 ring-amber-400 animate-pulse' 
                 : day.brewed 
-                  ? 'bg-coffee-gradient' 
+                  ? 'bg-gradient-to-br from-amber-600 to-amber-800' 
                   : 'bg-muted'
             }`}>
               {day.brewed && <Coffee className="w-4 h-4 text-white" />}
-              {day.today && !day.brewed && <Coffee className="w-4 h-4 text-white" />}
+              {day.today && !day.brewed && <Coffee className="w-4 h-4 text-amber-700" />}
             </div>
           </div>
         ))}
       </div>
       
       <Button 
-        className="w-full coffee-gradient hover:opacity-90 text-white font-medium"
+        className="w-full bg-gradient-to-r from-amber-600 to-amber-800 hover:opacity-90 text-white font-medium"
         onClick={handleDailyBrew}
         disabled={todayBrewed}
       >
-        {todayBrewed ? "Brewed Today ✓" : "☕ Brew Your Daily Coffee"}
+        {todayBrewed ? "✓ Brewed Today" : "☕ Brew Your Daily Coffee"}
       </Button>
       
       <p className="text-xs text-center text-muted-foreground mt-2">
