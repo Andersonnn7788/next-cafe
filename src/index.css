@@ -3,76 +3,55 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
-
 @layer base {
   :root {
-    --background: 25 15% 97%;
-    --foreground: 25 20% 15%;
-
-    --card: 25 15% 100%;
-    --card-foreground: 25 20% 15%;
-
-    --popover: 25 15% 100%;
-    --popover-foreground: 25 20% 15%;
-
-    --primary: 25 70% 40%;
-    --primary-foreground: 25 15% 97%;
-
-    --secondary: 25 30% 92%;
-    --secondary-foreground: 25 20% 15%;
-
-    --muted: 25 25% 95%;
-    --muted-foreground: 25 15% 45%;
-
-    --accent: 15 80% 55%;
-    --accent-foreground: 25 15% 97%;
-
+    --background: 0 0% 100%;
+    --foreground: 224 71.4% 4.1%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71.4% 4.1%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 220 14.3% 95.9%;
+    --secondary-foreground: 220.9 39.3% 11%;
+    --muted: 220 14.3% 95.9%;
+    --muted-foreground: 220 8.9% 46.1%;
+    --accent: 220 14.3% 95.9%;
+    --accent-foreground: 220.9 39.3% 11%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 25 25% 90%;
-    --input: 25 25% 90%;
-    --ring: 25 70% 40%;
-
-    --radius: 0.75rem;
-
-    /* Coffee-themed custom colors */
-    --coffee-bean: 25 60% 25%;
-    --coffee-cream: 35 25% 85%;
-    --coffee-gold: 45 90% 60%;
-    --coffee-dark: 25 40% 20%;
-    --coffee-light: 35 30% 95%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 262.1 83.3% 57.8%;
+    --radius: 0.5rem;
+    --coffee-dark: 25 70% 15%;
+    --coffee-bean: 25 70% 30%;
+    --coffee-light: 30 80% 90%;
+    --coffee-cream: 35 80% 85%;
+    --coffee-gold: 35 90% 55%;
   }
-
+ 
   .dark {
-    --background: 25 20% 8%;
-    --foreground: 25 15% 95%;
-
-    --card: 25 20% 10%;
-    --card-foreground: 25 15% 95%;
-
-    --popover: 25 20% 10%;
-    --popover-foreground: 25 15% 95%;
-
-    --primary: 25 70% 50%;
-    --primary-foreground: 25 20% 8%;
-
-    --secondary: 25 20% 15%;
-    --secondary-foreground: 25 15% 95%;
-
-    --muted: 25 20% 15%;
-    --muted-foreground: 25 15% 65%;
-
-    --accent: 15 80% 60%;
-    --accent-foreground: 25 20% 8%;
-
+    --background: 224 71.4% 4.1%;
+    --foreground: 210 20% 98%;
+    --card: 224 71.4% 4.1%;
+    --card-foreground: 210 20% 98%;
+    --popover: 224 71.4% 4.1%;
+    --popover-foreground: 210 20% 98%;
+    --primary: 263.4 70% 50.4%;
+    --primary-foreground: 210 20% 98%;
+    --secondary: 215 27.9% 16.9%;
+    --secondary-foreground: 210 20% 98%;
+    --muted: 215 27.9% 16.9%;
+    --muted-foreground: 217.9 10.6% 64.9%;
+    --accent: 215 27.9% 16.9%;
+    --accent-foreground: 210 20% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 25 20% 20%;
-    --input: 25 20% 20%;
-    --ring: 25 70% 50%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 215 27.9% 16.9%;
+    --input: 215 27.9% 16.9%;
+    --ring: 263.4 70% 50.4%;
   }
 }
 
@@ -80,53 +59,115 @@
   * {
     @apply border-border;
   }
-
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .font-display {
-    font-family: 'Playfair Display', serif;
+    @apply bg-background text-foreground;
   }
 }
 
 @layer components {
   .coffee-gradient {
-    background: linear-gradient(135deg, hsl(var(--coffee-bean)) 0%, hsl(var(--primary)) 50%, hsl(var(--coffee-gold)) 100%);
+    @apply bg-gradient-to-br from-coffee-bean via-coffee-gold to-coffee-cream;
   }
   
-  .cream-gradient {
-    background: linear-gradient(135deg, hsl(var(--coffee-cream)) 0%, hsl(var(--coffee-light)) 100%);
-  }
-
-  .bean-shadow {
-    box-shadow: 0 4px 20px rgba(101, 67, 33, 0.15);
-  }
-
-  .floating-animation {
-    animation: float 6s ease-in-out infinite;
-  }
-
   .pulse-glow {
-    animation: pulse-glow 2s ease-in-out infinite alternate;
+    animation: pulse-glow 2s infinite;
   }
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
+  
+  .hexagon {
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   }
-  50% {
-    transform: translateY(-10px);
+  
+  .coffee-bean-shape {
+    clip-path: path('M 50,0 C 90,25 90,75 50,100 10,75 10,25 50,0 Z');
+  }
+  
+  .animate-bounce {
+    animation: bounce 2s infinite;
+  }
+  
+  .animate-pulse {
+    animation: pulse 3s infinite;
+  }
+  
+  .animate-spin {
+    animation: spin 3s infinite;
+  }
+  
+  .hover-glow {
+    animation: glow 4s infinite alternate;
+  }
+  
+  .very-slow {
+    animation-duration: 4s;
+  }
+  
+  .slow {
+    animation-duration: 3s;
+  }
+  
+  .medium {
+    animation-duration: 2s;
+  }
+  
+  .fast {
+    animation-duration: 1s;
   }
 }
 
 @keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(var(--coffee-gold), 0.7);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 20px rgba(var(--coffee-gold), 0.9);
+  }
+}
+
+@keyframes glow {
   0% {
-    box-shadow: 0 0 20px rgba(101, 67, 33, 0.3);
+    box-shadow: 0 0 5px rgba(var(--coffee-gold), 0.5);
   }
   100% {
-    box-shadow: 0 0 30px rgba(101, 67, 33, 0.6);
+    box-shadow: 0 0 20px rgba(var(--coffee-gold), 0.9);
   }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-10%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Additional styles */
+.story-link {
+  @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
+}
+
+.hover-scale {
+  @apply transition-transform duration-200 hover:scale-105;
 }

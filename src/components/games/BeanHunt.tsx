@@ -196,7 +196,7 @@ const BeanHunt = () => {
                 top: `${bean.y}%`
               }}
             >
-              🫘
+              <span className="text-lg" role="img" aria-label="coffee bean">☕</span>
             </div>
           ))}
           

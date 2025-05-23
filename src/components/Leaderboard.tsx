@@ -3,8 +3,9 @@ import React, { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { Trophy } from "lucide-react";
+import { Trophy, Medal } from "lucide-react";
 import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface LeaderboardEntry {
   score: number;
@@ -12,24 +13,92 @@ interface LeaderboardEntry {
   game: string;
   moves?: number;
   timeLeft?: number;
+  question?: number;
+  username?: string;
+  avatar?: string;
 }
+
+// Generate some fake user data for a more populated leaderboard
+const demoUsernames = ["CoffeeExplorer", "LatteLover", "EspressoPro", "BeanMaster", "AmericanoFan", "BrewNinja"];
+const demoAvatars = ["☕", "🧋", "🥤", "🧉", "🍵", "🫖"];
+
+const generateRandomEntries = (game: string, count: number): LeaderboardEntry[] => {
+  const entries: LeaderboardEntry[] = [];
+  
+  for (let i = 0; i < count; i++) {
+    const username = demoUsernames[Math.floor(Math.random() * demoUsernames.length)];
+    const avatar = demoAvatars[Math.floor(Math.random() * demoAvatars.length)];
+    const date = new Date();
+    date.setDate(date.getDate() - Math.floor(Math.random() * 10));
+    
+    let entry: LeaderboardEntry = {
+      score: Math.floor(Math.random() * 100) + 50,
+      date: date.toISOString(),
+      game,
+      username,
+      avatar
+    };
+    
+    if (game === "pod-match") {
+      entry.moves = Math.floor(Math.random() * 20) + 10;
+      entry.timeLeft = Math.floor(Math.random() * 30) + 10;
+    } else if (game === "coffee-quiz") {
+      entry.question = Math.floor(Math.random() * 5) + 1;
+    }
+    
+    entries.push(entry);
+  }
+  
+  return entries.sort((a, b) => b.score - a.score);
+};
+
+const mergeAndSortEntries = (savedEntries: LeaderboardEntry[], demoEntries: LeaderboardEntry[]): LeaderboardEntry[] => {
+  // Add usernames to saved entries if they don't have them
+  const enhancedSavedEntries = savedEntries.map(entry => {
+    if (!entry.username) {
+      const username = demoUsernames[Math.floor(Math.random() * demoUsernames.length)];
+      const avatar = demoAvatars[Math.floor(Math.random() * demoAvatars.length)];
+      return {
+        ...entry,
+        username: "You",
+        avatar: "🌟"
+      };
+    }
+    return entry;
+  });
+  
+  // Combine and sort by score
+  return [...enhancedSavedEntries, ...demoEntries]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 10);
+};
 
 const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState("bean-hunt");
   const [beanHuntEntries, setBeanHuntEntries] = useState<LeaderboardEntry[]>([]);
   const [podMatchEntries, setPodMatchEntries] = useState<LeaderboardEntry[]>([]);
   const [brewMasterEntries, setBrewMasterEntries] = useState<LeaderboardEntry[]>([]);
+  const [coffeeQuizEntries, setCoffeeQuizEntries] = useState<LeaderboardEntry[]>([]);
 
   // Load leaderboard entries from localStorage
   useEffect(() => {
     const loadLeaderboards = () => {
-      const beanHunt = JSON.parse(localStorage.getItem("beanHuntLeaderboard") || "[]");
-      const podMatch = JSON.parse(localStorage.getItem("podMatchLeaderboard") || "[]");
-      const brewMaster = JSON.parse(localStorage.getItem("brewMasterLeaderboard") || "[]");
+      const beanHuntSaved = JSON.parse(localStorage.getItem("beanHuntLeaderboard") || "[]");
+      const podMatchSaved = JSON.parse(localStorage.getItem("podMatchLeaderboard") || "[]");
+      const brewMasterSaved = JSON.parse(localStorage.getItem("brewMasterLeaderboard") || "[]");
+      const coffeeQuizSaved = JSON.parse(localStorage.getItem("coffeeQuizLeaderboard") || "[]");
       
-      setBeanHuntEntries(beanHunt);
-      setPodMatchEntries(podMatch);
-      setBrewMasterEntries(brewMaster);
+      // Generate demo data for each game
+      const beanHuntDemo = generateRandomEntries("Bean Hunt", 8);
+      const podMatchDemo = generateRandomEntries("Pod Match", 8);
+      const brewMasterDemo = generateRandomEntries("Brew Master", 8);
+      const coffeeQuizDemo = generateRandomEntries("Coffee Quiz", 8);
+      
+      // Merge real and demo data
+      setBeanHuntEntries(mergeAndSortEntries(beanHuntSaved, beanHuntDemo));
+      setPodMatchEntries(mergeAndSortEntries(podMatchSaved, podMatchDemo));
+      setBrewMasterEntries(mergeAndSortEntries(brewMasterSaved, brewMasterDemo));
+      setCoffeeQuizEntries(mergeAndSortEntries(coffeeQuizSaved, coffeeQuizDemo));
     };
     
     // Load on initial render
@@ -51,8 +120,19 @@ const Leaderboard = () => {
         return podMatchEntries;
       case "brew-master":
         return brewMasterEntries;
+      case "coffee-quiz":
+        return coffeeQuizEntries;
       default:
         return [];
+    }
+  };
+
+  const getRankLabel = (index: number) => {
+    switch (index) {
+      case 0: return <span className="flex items-center text-yellow-500 font-bold"><Medal className="w-4 h-4 mr-1 fill-yellow-500 stroke-yellow-700" />1st</span>;
+      case 1: return <span className="flex items-center text-gray-400 font-bold"><Medal className="w-4 h-4 mr-1 fill-gray-300 stroke-gray-500" />2nd</span>;
+      case 2: return <span className="flex items-center text-amber-700 font-bold"><Medal className="w-4 h-4 mr-1 fill-amber-600 stroke-amber-800" />3rd</span>;
+      default: return <span className="text-muted-foreground">{index + 1}th</span>;
     }
   };
 
@@ -68,51 +148,59 @@ const Leaderboard = () => {
           <TabsTrigger value="bean-hunt" className="flex-1">Bean Hunt</TabsTrigger>
           <TabsTrigger value="pod-match" className="flex-1">Pod Match</TabsTrigger>
           <TabsTrigger value="brew-master" className="flex-1">Brew Master</TabsTrigger>
+          <TabsTrigger value="coffee-quiz" className="flex-1">Coffee Quiz</TabsTrigger>
         </TabsList>
         
-        {["bean-hunt", "pod-match", "brew-master"].map(game => (
+        {["bean-hunt", "pod-match", "brew-master", "coffee-quiz"].map(game => (
           <TabsContent key={game} value={game}>
             <div className="max-h-[300px] overflow-y-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-10">Rank</TableHead>
+                    <TableHead>Player</TableHead>
                     <TableHead>Score</TableHead>
                     {game === "pod-match" && <TableHead>Moves</TableHead>}
                     {game === "pod-match" && <TableHead>Time Left</TableHead>}
-                    <TableHead>Date</TableHead>
+                    {game === "coffee-quiz" && <TableHead>Question</TableHead>}
+                    <TableHead className="text-right">Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {getEntriesForActiveTab().length > 0 ? (
                     getEntriesForActiveTab().map((entry, index) => (
-                      <TableRow key={index}>
+                      <TableRow key={index} className={entry.username === "You" ? "bg-coffee-cream/10" : ""}>
                         <TableCell>
-                          {index === 0 ? (
-                            <span className="text-yellow-500 font-bold">1st</span>
-                          ) : index === 1 ? (
-                            <span className="text-gray-400 font-bold">2nd</span>
-                          ) : index === 2 ? (
-                            <span className="text-amber-700 font-bold">3rd</span>
-                          ) : (
-                            `${index + 1}th`
-                          )}
+                          {getRankLabel(index)}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="w-6 h-6">
+                              <AvatarFallback>{entry.avatar || "👤"}</AvatarFallback>
+                            </Avatar>
+                            <span className={entry.username === "You" ? "font-medium" : ""}>
+                              {entry.username || "Player"}
+                            </span>
+                          </div>
                         </TableCell>
                         <TableCell className="font-semibold">{entry.score}</TableCell>
                         {game === "pod-match" && (
-                          <TableCell>{entry.moves}</TableCell>
+                          <TableCell>{entry.moves || "-"}</TableCell>
                         )}
                         {game === "pod-match" && (
-                          <TableCell>{entry.timeLeft}s</TableCell>
+                          <TableCell>{entry.timeLeft || "-"}s</TableCell>
                         )}
-                        <TableCell>
-                          {format(new Date(entry.date), "MMM d, yyyy")}
+                        {game === "coffee-quiz" && (
+                          <TableCell>{entry.question || "-"}</TableCell>
+                        )}
+                        <TableCell className="text-right text-muted-foreground text-sm">
+                          {format(new Date(entry.date), "MMM d")}
                         </TableCell>
                       </TableRow>
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="text-center py-4 text-muted-foreground">
+                      <TableCell colSpan={game === "pod-match" ? 6 : 4} className="text-center py-4 text-muted-foreground">
                         No scores yet. Play a game to be the first on the leaderboard!
                       </TableCell>
                     </TableRow>
