@@ -1,9 +1,9 @@
 
+import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Palette, Star, Coffee, Sparkles } from "lucide-react";
-import { useState } from "react";
 
 const AvatarCustomization = () => {
   const [selectedStyle, setSelectedStyle] = useState("espresso-explorer");
@@ -39,6 +39,9 @@ const AvatarCustomization = () => {
     return accessories.find(acc => acc.id === selectedAccessory);
   };
 
+  const currentAvatar = getCurrentAvatar();
+  const currentAccessory = getCurrentAccessory();
+
   return (
     <Card className="p-6">
       <div className="flex items-center space-x-3 mb-6">
@@ -46,28 +49,26 @@ const AvatarCustomization = () => {
         <h3 className="text-lg font-semibold text-coffee-dark">Customize Your Coffee Avatar</h3>
       </div>
 
-      {/* Avatar Preview */}
       <div className="flex justify-center mb-6">
         <div className={`relative w-24 h-24 rounded-full flex items-center justify-center ${
           backgrounds.find(bg => bg.id === selectedBackground)?.color || "bg-coffee-gradient"
         }`}>
-          <span className="text-4xl">{getCurrentAvatar()?.emoji}</span>
-          {getCurrentAccessory() && (
+          <span className="text-4xl">{currentAvatar?.emoji}</span>
+          {currentAccessory && (
             <div className="absolute -top-2 -right-2 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg">
-              <getCurrentAccessory().icon className="w-4 h-4 text-coffee-gold" />
+              <currentAccessory.icon className="w-4 h-4 text-coffee-gold" />
             </div>
           )}
         </div>
       </div>
 
       <div className="text-center mb-6">
-        <h4 className="font-semibold text-coffee-dark">{getCurrentAvatar()?.name}</h4>
+        <h4 className="font-semibold text-coffee-dark">{currentAvatar?.name}</h4>
         <Badge variant="secondary" className="mt-1 text-xs">
-          {getCurrentAvatar()?.trait}
+          {currentAvatar?.trait}
         </Badge>
       </div>
 
-      {/* Style Selection */}
       <div className="mb-6">
         <label className="text-sm font-medium text-coffee-dark mb-3 block">Personality Style</label>
         <div className="grid grid-cols-2 gap-2">
@@ -89,25 +90,26 @@ const AvatarCustomization = () => {
         </div>
       </div>
 
-      {/* Accessory Selection */}
       <div className="mb-6">
         <label className="text-sm font-medium text-coffee-dark mb-3 block">Accessory</label>
         <div className="grid grid-cols-4 gap-2">
-          {accessories.map((accessory) => (
-            <Button
-              key={accessory.id}
-              variant={selectedAccessory === accessory.id ? "default" : "outline"}
-              size="sm"
-              className={selectedAccessory === accessory.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""}
-              onClick={() => setSelectedAccessory(accessory.id)}
-            >
-              <accessory.icon className="w-4 h-4" />
-            </Button>
-          ))}
+          {accessories.map((accessory) => {
+            const IconComponent = accessory.icon;
+            return (
+              <Button
+                key={accessory.id}
+                variant={selectedAccessory === accessory.id ? "default" : "outline"}
+                size="sm"
+                className={selectedAccessory === accessory.id ? "bg-coffee-gold hover:bg-coffee-gold/90 text-coffee-dark" : ""}
+                onClick={() => setSelectedAccessory(accessory.id)}
+              >
+                <IconComponent className="w-4 h-4" />
+              </Button>
+            );
+          })}
         </div>
       </div>
 
-      {/* Background Selection */}
       <div className="mb-6">
         <label className="text-sm font-medium text-coffee-dark mb-3 block">Background</label>
         <div className="grid grid-cols-2 gap-2">
